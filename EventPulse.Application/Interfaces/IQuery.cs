@@ -1,6 +1,5 @@
 namespace EventPulse.Application.Interfaces;
 
-public interface IQuery
-{
-    
-}
+public interface IBaseQuery;
+
+public interface IQuery<TResponse> : IBaseQuery;

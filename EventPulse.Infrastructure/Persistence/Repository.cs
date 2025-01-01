@@ -9,7 +9,7 @@ public class Repository<T> : IRepository<T> where T : class, IBaseEntity
 {
     private readonly DbSet<T> _dbSet;
 
-    public Repository(DbContext dbContext)
+    protected Repository(DbContext dbContext)
     {
         var context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _dbSet = context.Set<T>();
@@ -17,24 +17,24 @@ public class Repository<T> : IRepository<T> where T : class, IBaseEntity
 
     public async Task<List<T>> GetAllAsync(bool tracking = false)
     {
-        return await GetQueryable(tracking: tracking).ToListAsync();
+        return await GetQueryable(tracking).ToListAsync();
     }
 
     public async Task<List<T>> GetAsync(Expression<Func<T, bool>> predicate, bool tracking = false)
     {
-        return await GetQueryable(tracking: tracking).Where(predicate: predicate).ToListAsync();
+        return await GetQueryable(tracking).Where(predicate).ToListAsync();
     }
 
     public async Task<List<TResult>> GetAsync<TResult>(Expression<Func<T, bool>> predicate,
         Expression<Func<T, TResult>> selector, bool tracking = false)
     {
-        return await GetQueryable(tracking: tracking).Where(predicate: predicate).Select(selector: selector)
+        return await GetQueryable(tracking).Where(predicate).Select(selector)
             .ToListAsync();
     }
 
     public async Task<T?> GetSingleAsync(Expression<Func<T, bool>> predicate, bool tracking = false)
     {
-        return await GetQueryable(tracking: tracking).SingleOrDefaultAsync(predicate: predicate);
+        return await GetQueryable(tracking).SingleOrDefaultAsync(predicate);
     }
 
     public async Task<T?> FindByIdAsync(int id)
@@ -87,17 +87,17 @@ public class Repository<T> : IRepository<T> where T : class, IBaseEntity
 
     public Task<int> CountAsync(Expression<Func<T, bool>> predicate)
     {
-        return GetQueryable().CountAsync(predicate: predicate);
+        return GetQueryable().CountAsync(predicate);
     }
 
     public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
     {
-        return GetQueryable().AnyAsync(predicate: predicate);
+        return GetQueryable().AnyAsync(predicate);
     }
 
     public Task<bool> AllAsync(Expression<Func<T, bool>> predicate)
     {
-        return GetQueryable().AllAsync(predicate: predicate);
+        return GetQueryable().AllAsync(predicate);
     }
 
     private IQueryable<T> GetQueryable(bool tracking = false)

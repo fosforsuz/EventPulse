@@ -1,6 +1,7 @@
+using EventPulse.Domain.Entities;
+
 namespace EventPulse.Infrastructure.Interfaces;
 
-public class IEventParticipantRepository
+public interface IEventParticipantRepository : IRepository<EventParticipant>
 {
-    
 }

@@ -1,11 +1,11 @@
 using EventPulse.Application.Commands.User.UserCreate;
 using FluentValidation;
 
-namespace EventPulse.Application.Validation.Event;
+namespace EventPulse.Application.Validation.User;
 
-public class CreateEventCommandValidator : AbstractValidator<CreateUserCommand>
+public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
-    public CreateEventCommandValidator()
+    public CreateUserCommandValidator()
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
         RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(100);
