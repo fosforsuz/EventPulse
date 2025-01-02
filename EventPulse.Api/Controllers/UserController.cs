@@ -50,7 +50,7 @@ public class UserController : ControllerBase
         var errorMessage = string.Join(", ", result.Errors.Select(error => error.Message));
         return BadRequest(ResponseModel.Error(errorMessage));
     }
-    
+
     [HttpPut]
     [Route("delete-user/{id:int}")]
     public async Task<IActionResult> DeleteUser(int id)
@@ -74,10 +74,10 @@ public class UserController : ControllerBase
 
         if (result.IsSuccess)
             return Ok(string.IsNullOrWhiteSpace(message)
-                ? ResponseModel.Success(data: result.Value, message: message)
-                : ResponseModel.Success(data: result.Value));
-        
-        
+                ? ResponseModel.Success(data: result.Value)
+                : ResponseModel.Success(data: result.Value, message: message));
+
+
         var errorMessage = string.Join(", ", result.Errors.Select(error => error.Message));
         return BadRequest(ResponseModel.Error(message: errorMessage));
     }

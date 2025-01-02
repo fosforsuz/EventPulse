@@ -4,4 +4,4 @@ using MediatR;
 
 namespace EventPulse.Application.Queries.FindUserById;
 
-public record FindUserByIdQuery(int Id) : IRequest<UserDto>, IRequest<Result<UserDto>>;
+public record FindUserByIdQuery(int Id) : IRequest<UserDto>, IRequest<Result<UserDto>>, IRequest<Result<EventDto>>;

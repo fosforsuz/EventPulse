@@ -37,6 +37,12 @@ public class Repository<T> : IRepository<T> where T : class, IBaseEntity
         return await GetQueryable(tracking).SingleOrDefaultAsync(predicate);
     }
 
+    public async Task<TResult?> GetSingleAsync<TResult>(Expression<Func<T, bool>> predicate,
+        Expression<Func<T, TResult>> selector, bool tracking = false)
+    {
+        return await GetQueryable(tracking).Where(predicate).Select(selector).SingleOrDefaultAsync();
+    }
+
     public async Task<T?> FindByIdAsync(int id)
     {
         return await _dbSet.FindAsync(id);

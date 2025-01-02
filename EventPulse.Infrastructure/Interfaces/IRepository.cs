@@ -14,6 +14,9 @@ public interface IRepository<T> where T : class, IBaseEntity
 
     Task<T?> GetSingleAsync(Expression<Func<T, bool>> predicate, bool tracking = false);
 
+    Task<TResult?> GetSingleAsync<TResult>(Expression<Func<T, bool>> predicate,
+        Expression<Func<T, TResult>> selector, bool tracking = false);
+
     Task<T?> FindByIdAsync(int id);
 
     Task<T?> FindAsync(params object[] keyValues);
