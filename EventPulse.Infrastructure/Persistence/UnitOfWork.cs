@@ -1,9 +1,10 @@
+using EventPulse.Infrastructure.Context;
 using EventPulse.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventPulse.Infrastructure.Persistence;
 
-internal class UnitOfWork : IUnitOfWork
+internal sealed class UnitOfWork : IUnitOfWork
 {
     private readonly DbContext _context;
     private bool _disposed;
@@ -13,7 +14,7 @@ internal class UnitOfWork : IUnitOfWork
     private INotificationRepository? _notificationRepository;
     private IUserRepository? _userRepository;
 
-    public UnitOfWork(DbContext context)
+    public UnitOfWork(EventPulseContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
@@ -50,7 +51,7 @@ internal class UnitOfWork : IUnitOfWork
         GC.SuppressFinalize(this);
     }
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (_disposed)
             return;
