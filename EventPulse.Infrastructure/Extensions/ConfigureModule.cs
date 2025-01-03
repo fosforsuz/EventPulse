@@ -1,8 +1,7 @@
-// using EventPulse.Infrastructure.Context;
-
 using EventPulse.Infrastructure.Context;
 using EventPulse.Infrastructure.Interfaces;
 using EventPulse.Infrastructure.Persistence;
+using EventPulse.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,11 +9,12 @@ namespace EventPulse.Infrastructure.Extensions;
 
 public static class ConfigureModule
 {
-    public static void ConfigureInfrastructure(this IServiceCollection services, string connectionString,
-        bool useInMemory = false)
+    public static void ConfigureInfrastructure(this IServiceCollection services, string connectionString, string secret,
+        string issuer, string audience, bool useInMemory = false)
     {
         services.ConfigureDbContext(connectionString, useInMemory);
         services.ConfigureRepositories();
+        services.ConfigureJwtServices(secret: secret, issuer: issuer, audience: audience);
         services.ConfigureUnitOfWork();
     }
 
@@ -40,6 +40,15 @@ public static class ConfigureModule
             .AsImplementedInterfaces()
             .WithScopedLifetime()
         );
+    }
+
+    private static void ConfigureJwtServices(this IServiceCollection services, string secret, string issuer, string audience)
+    {
+        services.AddSingleton<IJwtService>(new JwtService(
+            secret: secret,
+            issuer: issuer,
+            audience: audience
+        ));
     }
 
     private static void ConfigureUnitOfWork(this IServiceCollection services)

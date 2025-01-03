@@ -20,10 +20,10 @@ public class GetPastEventsQueryHandler : IRequestHandler<GetPastEventsQuery, Res
 
         var pastEvents = await _unitOfWork.EventRepository
             .GetAsync(
-                predicate: @event =>
+                @event =>
                     @event.EventDate < DateTime.Now && @event.EventDate > lastSixMonths && @event.IsCompleted &&
                     @event.IsDeleted,
-                selector: @event => new EventDto()
+                @event => new EventDto
                 {
                     Id = @event.Id,
                     Title = @event.Title,

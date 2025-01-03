@@ -21,7 +21,7 @@ public class FindUserByIdQueryHandler : IRequestHandler<FindUserByIdQuery, Resul
         if (user is null)
             return Result.Fail<UserDto>("User not found.");
 
-        var userDto = new UserDto()
+        var userDto = new UserDto
         {
             Id = user.Id,
             Name = user.Name,

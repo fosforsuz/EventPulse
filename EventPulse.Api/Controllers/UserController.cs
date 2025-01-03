@@ -28,12 +28,10 @@ public class UserController : ControllerBase
             return BadRequest(ResponseModel.Error("An error occurred while creating the user."));
 
         if (result.IsSuccess)
-        {
             return CreatedAtAction(
                 nameof(GetUserById),
                 new { id = result.Value, message = "User created successfully." }
             );
-        }
 
         var errorMessage = string.Join(", ", result.Errors.Select(error => error.Message));
         return BadRequest(ResponseModel.Error(errorMessage));
@@ -55,7 +53,7 @@ public class UserController : ControllerBase
     [Route("delete-user/{id:int}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
-        if (await _mediator.Send(new DeleteUserCommand(Id: id)) is not { } result)
+        if (await _mediator.Send(new DeleteUserCommand(id)) is not { } result)
             return BadRequest(ResponseModel.Error("An error occurred while deleting the user."));
 
         if (result.IsSuccess)
@@ -69,16 +67,16 @@ public class UserController : ControllerBase
     [Route("{id:int}")]
     public async Task<IActionResult> GetUserById(int id, string message = "")
     {
-        if (await _mediator.Send(new FindUserByIdQuery(Id: id)) is not Result<UserDto> result)
+        if (await _mediator.Send(new FindUserByIdQuery(id)) is not Result<UserDto> result)
             return BadRequest(ResponseModel.Error("An error occurred while fetching the user."));
 
         if (result.IsSuccess)
             return Ok(string.IsNullOrWhiteSpace(message)
-                ? ResponseModel.Success(data: result.Value)
-                : ResponseModel.Success(data: result.Value, message: message));
+                ? ResponseModel.Success(result.Value)
+                : ResponseModel.Success(result.Value, message));
 
 
         var errorMessage = string.Join(", ", result.Errors.Select(error => error.Message));
-        return BadRequest(ResponseModel.Error(message: errorMessage));
+        return BadRequest(ResponseModel.Error(errorMessage));
     }
 }

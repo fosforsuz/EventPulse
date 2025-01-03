@@ -1,6 +1,6 @@
 namespace EventPulse.Infrastructure.Security;
 
-public class IJwtService
+public interface IJwtService
 {
-    
+    string GenerateToken(int userId, string role, string name, string email);
 }

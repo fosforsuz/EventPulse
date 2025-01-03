@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Queries\User\" />
+        <Folder Include="Queries\User\"/>
     </ItemGroup>
 
 </Project>

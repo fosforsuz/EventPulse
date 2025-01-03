@@ -18,8 +18,8 @@ public class GetActiveEventsQueryHandler : IRequestHandler<GetActiveEventsQuery,
     {
         var events = await _unitOfWork.EventRepository
             .GetAsync(
-                predicate: @event => @event.EventDate >= DateTime.Now && !@event.IsDeleted && !@event.IsCompleted,
-                selector: @event => new EventDto()
+                @event => @event.EventDate >= DateTime.Now && !@event.IsDeleted && !@event.IsCompleted,
+                @event => new EventDto
                 {
                     Id = @event.Id,
                     Title = @event.Title,

@@ -50,4 +50,14 @@ public class User : IBaseEntity
         IsDeleted = true;
         UpdateAt = DateTime.Now;
     }
+
+    public bool Authenticate(string password)
+    {
+        return BCrypt.Net.BCrypt.Verify(password, PasswordHash);
+    }
+
+    protected void SetPassword(string password)
+    {
+        PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
+    }
 }

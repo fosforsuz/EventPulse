@@ -19,8 +19,8 @@ public class FindEventByIdQueryHandler : IRequestHandler<FindUserByIdQuery, Resu
     {
         var eventObject = await _unitOfWork.EventRepository
             .GetSingleAsync(
-                predicate: @event => @event.Id == request.Id,
-                selector: @event => new EventDto()
+                @event => @event.Id == request.Id,
+                @event => new EventDto
                 {
                     Id = @event.Id,
                     Title = @event.Title,

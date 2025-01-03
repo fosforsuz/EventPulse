@@ -4,4 +4,4 @@ using MediatR;
 
 namespace EventPulse.Application.Queries.Event.GetActiveEvents;
 
-public record GetActiveEventsQuery() : IRequest<Result<List<EventDto>>>;
+public record GetActiveEventsQuery : IRequest<Result<List<EventDto>>>;

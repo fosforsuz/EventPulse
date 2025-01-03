@@ -5,7 +5,6 @@ using EventPulse.Application.Commands.Event.EventUpdate;
 using EventPulse.Application.Queries.Event;
 using EventPulse.Application.Queries.Event.GetActiveEvents;
 using EventPulse.Application.Queries.Event.GetPastEvents;
-using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,7 +30,7 @@ public class EventController : ControllerBase
             return BadRequest(ResponseModel.Error("An error occurred while getting the events."));
 
         if (result.IsSuccess)
-            return Ok(ResponseModel.Success(data: result.Value));
+            return Ok(ResponseModel.Success(result.Value));
 
         var errorMessage = string.Join(", ", result.Errors.Select(error => error.Message));
         return BadRequest(ResponseModel.Error(errorMessage));
@@ -45,7 +44,7 @@ public class EventController : ControllerBase
             return BadRequest(ResponseModel.Error("An error occurred while getting the events."));
 
         if (result.IsSuccess)
-            return Ok(ResponseModel.Success(data: result.Value));
+            return Ok(ResponseModel.Success(result.Value));
 
         var errorMessage = string.Join(", ", result.Errors.Select(error => error.Message));
         return BadRequest(ResponseModel.Error(errorMessage));
@@ -55,12 +54,12 @@ public class EventController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetEventById(int id, string message = "")
     {
-        if (await _mediator.Send(new FindEventByIdQuery(Id: id)) is not { } result)
+        if (await _mediator.Send(new FindEventByIdQuery(id)) is not { } result)
             return BadRequest(ResponseModel.Error("An error occurred while getting the event."));
 
         if (result.IsSuccess)
             return Ok(string.IsNullOrWhiteSpace(message)
-                ? ResponseModel.Success(data: result.Value)
+                ? ResponseModel.Success(result.Value)
                 : ResponseModel.Success(message: message, data: result.Value));
 
 
@@ -97,7 +96,7 @@ public class EventController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> DeleteEvent(DeleteEventCommand request)
     {
-        var result = await _mediator.Send(request: request);
+        var result = await _mediator.Send(request);
 
         if (result.IsSuccess)
             return NoContent();
