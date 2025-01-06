@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { AuthLayout } from "../../layouts/AuthLayout";
-import logo from "../assets/eventPulseTransparent.svg";
-import { Button, Spin } from "antd";
+import { Button, Card, Spin } from "antd";
+import { Logo } from "../../components/auth/Logo";
+import Heading from "../../components/auth/Heading";
 
 export const VerifyEmail = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -15,17 +16,9 @@ export const VerifyEmail = () => {
 
   return (
     <AuthLayout>
-      <div className="card w-full max-w-md p-6 bg-white shadow-lg rounded-lg">
-        {/* Logo */}
-        <div className="flex flex-col items-center mb-6">
-          <img src={logo} alt="Event Pulse Logo" width={200} className="mb-2" />
-          <p className="text-sm text-gray-500">Feel the Pulse of Your Events</p>
-        </div>
-
-        {/* Heading */}
-        <h1 className="text-red-500 text-2xl font-bold mb-4 text-center">
-          Verify Your Email
-        </h1>
+      <Card>
+        <Logo />
+        <Heading title="Verify Email" />
 
         {/* Description */}
         <p className="text-center text-gray-600 mb-6">
@@ -42,7 +35,7 @@ export const VerifyEmail = () => {
         >
           {loading ? <Spin size="small" /> : "Verify Email"}
         </Button>
-      </div>
+      </Card>
     </AuthLayout>
   );
 };
