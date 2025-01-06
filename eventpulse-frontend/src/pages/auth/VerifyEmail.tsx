@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AuthLayout } from "../layouts/AuthLayout";
+import { AuthLayout } from "../../layouts/AuthLayout";
 import logo from "../assets/eventPulseTransparent.svg";
 import { Button, Spin } from "antd";
 

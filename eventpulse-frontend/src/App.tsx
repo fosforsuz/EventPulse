@@ -1,13 +1,13 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
+import Login from "./pages/auth/Login";
 import ErrorPage from "./pages/ErrorPage";
-import Register from "./pages/Register.tsx";
+import Register from "./pages/auth/Register.tsx";
 import urlEndpoints from "./constants/urlEndpoints";
 import "./styles/global.css";
-import PasswordResetRequest from "./pages/PasswordResetRequest.tsx";
-import { PasswordReset } from "./pages/PasswordReset.tsx";
+import PasswordResetRequest from "./pages/auth/PasswordResetRequest.tsx";
+import { PasswordReset } from "./pages/auth/PasswordReset.tsx";
 
 function App() {
   return (

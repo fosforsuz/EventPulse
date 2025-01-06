@@ -1,6 +1,6 @@
 import {Form, Input, Button} from "antd";
-import {AuthLayout} from "../layouts/AuthLayout";
-import logo from "../assets/eventPulseTransparent.svg";
+import {AuthLayout} from "../../layouts/AuthLayout";
+import logo from "../../assets/eventPulseTransparent.svg";
 
 
 const Register = () => {
