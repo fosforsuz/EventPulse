@@ -1,9 +1,9 @@
 import React from "react";
-import {AuthLayout} from "../layouts/AuthLayout";
-import Heading from "../components/common/Heading.tsx";
-import {Logo} from "../components/common/Logo.tsx";
-import LoginForm from "../components/forms/LoginForm.tsx";
-import {LoginFooter} from "../components/footers/LoginFooter.tsx";
+import {AuthLayout} from "../../layouts/AuthLayout";
+import Heading from "../../components/auth/Heading.tsx";
+import {Logo} from "../../components/auth/Logo.tsx";
+import LoginForm from "../../components/forms/LoginForm.tsx";
+import {LoginFooter} from "../../components/footers/LoginFooter.tsx";
 
 
 const Login: React.FC = () => {
