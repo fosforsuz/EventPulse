@@ -131,7 +131,7 @@ EventPulse
 ## How to Run
 
 ### Prerequisites
-- .NET SDK 7.0 or higher
+- .NET SDK 9.0
 - SQL Server
 
 ### Steps
