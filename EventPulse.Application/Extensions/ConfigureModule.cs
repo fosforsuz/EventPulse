@@ -12,8 +12,8 @@ public static class ConfigureModule
         IConfiguration configuration)
     {
         var (secret, issuer, audience) = GetSecretAndIssuer(configuration);
-        services.ConfigureInfrastructure(connectionString: GetConnectionString(configuration), secret: secret,
-            issuer: issuer, audience: audience);
+        services.ConfigureInfrastructure(GetConnectionString(configuration), secret,
+            issuer, audience);
         services.ConfigureApplication();
     }
 

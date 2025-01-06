@@ -2,7 +2,7 @@ namespace EventPulse.Api.Models;
 
 public class ResponseModel
 {
-    public bool Status { get; private set; }
+    public bool IsSuccess { get; private set; }
     public string? Message { get; private set; }
     public object? Data { get; private set; }
 
@@ -10,7 +10,7 @@ public class ResponseModel
     {
         return new ResponseModel
         {
-            Status = true,
+            IsSuccess = true,
             Message = "Success",
             Data = data
         };
@@ -20,7 +20,7 @@ public class ResponseModel
     {
         return new ResponseModel
         {
-            Status = true,
+            IsSuccess = true,
             Message = message,
             Data = data
         };
@@ -30,7 +30,7 @@ public class ResponseModel
     {
         return new ResponseModel
         {
-            Status = false,
+            IsSuccess = false,
             Message = message
         };
     }

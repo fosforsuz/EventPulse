@@ -7,9 +7,9 @@ namespace EventPulse.Infrastructure.Security;
 
 internal class JwtService : IJwtService
 {
+    private readonly string _audience;
     private readonly string _issuer;
     private readonly string _secret;
-    private readonly string _audience;
 
     public JwtService(string secret, string issuer, string audience)
     {

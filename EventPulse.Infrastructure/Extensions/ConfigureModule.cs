@@ -14,7 +14,7 @@ public static class ConfigureModule
     {
         services.ConfigureDbContext(connectionString, useInMemory);
         services.ConfigureRepositories();
-        services.ConfigureJwtServices(secret: secret, issuer: issuer, audience: audience);
+        services.ConfigureJwtServices(secret, issuer, audience);
         services.ConfigureUnitOfWork();
     }
 
@@ -42,12 +42,13 @@ public static class ConfigureModule
         );
     }
 
-    private static void ConfigureJwtServices(this IServiceCollection services, string secret, string issuer, string audience)
+    private static void ConfigureJwtServices(this IServiceCollection services, string secret, string issuer,
+        string audience)
     {
         services.AddSingleton<IJwtService>(new JwtService(
-            secret: secret,
-            issuer: issuer,
-            audience: audience
+            secret,
+            issuer,
+            audience
         ));
     }
 

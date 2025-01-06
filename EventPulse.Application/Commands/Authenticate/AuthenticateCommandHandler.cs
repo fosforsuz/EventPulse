@@ -7,8 +7,8 @@ namespace EventPulse.Application.Commands.Authenticate;
 
 public class AuthenticateCommandHandler
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtService _jwtService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IValidator<AuthenticateCommand> _validator;
 
     public AuthenticateCommandHandler(IUnitOfWork unitOfWork, IJwtService jwtService,
@@ -27,14 +27,14 @@ public class AuthenticateCommandHandler
             return Result.Fail<string>("Validation failed.")
                 .WithErrors(validationResult.Errors.Select(error => error.ErrorMessage));
 
-        var user = await _unitOfWork.UserRepository.GetSingleAsync(predicate: @user =>
-            @user.Email == request.Email && !@user.IsDeleted);
+        var user = await _unitOfWork.UserRepository.GetSingleAsync(user =>
+            user.Email == request.Email && !user.IsDeleted);
 
         if (user == null || !user.Authenticate(request.Password))
             return Result.Fail<string>("Invalid email or password.");
 
 
-        var token = _jwtService.GenerateToken(userId: user.Id, user.Role, user.Name, user.Email);
+        var token = _jwtService.GenerateToken(user.Id, user.Role, user.Name, user.Email);
         return Result.Ok(token);
     }
 }
