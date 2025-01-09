@@ -8,6 +8,7 @@ import urlEndpoints from "./constants/urlEndpoints";
 import "./styles/global.css";
 import PasswordResetRequest from "./pages/auth/PasswordResetRequest.tsx";
 import { PasswordReset } from "./pages/auth/PasswordReset.tsx";
+import SampleComponent from "./components/SampleComponent.tsx";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           element={<PasswordResetRequest />}
         />
         <Route path={urlEndpoints.passwordReset} element={<PasswordReset />} />
+        <Route path={"/sample-component"} element={<SampleComponent />} />
         <Route path={urlEndpoints.error} element={<ErrorPage />} />
       </Routes>
     </Router>
