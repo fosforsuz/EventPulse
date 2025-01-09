@@ -10,7 +10,7 @@ namespace EventPulse.Domain.Entities;
 /// verification, and relationship mapping to associated events and participants.
 /// </summary>
 [Index("Email", Name = "UQ__Users__A9D105341A680F55", IsUnique = true)]
-public class User : IBaseEntity
+public sealed class User : IBaseEntity
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="User"/> class with the provided details.
@@ -60,9 +60,9 @@ public class User : IBaseEntity
     public DateTime? PasswordResetAt { get; set; }
 
     [InverseProperty("User")]
-    public virtual ICollection<EventParticipant> EventParticipants { get; set; } = new List<EventParticipant>();
+    public ICollection<EventParticipant> EventParticipants { get; set; } = new List<EventParticipant>();
 
-    [InverseProperty("Creator")] public virtual ICollection<Event> Events { get; set; } = new List<Event>();
+    [InverseProperty("Creator")] public ICollection<Event> Events { get; set; } = new List<Event>();
 
     [Key] public int Id { get; set; }
 
@@ -158,7 +158,7 @@ public class User : IBaseEntity
     /// Sets a new password by hashing it.
     /// </summary>
     /// <param name="password">The plain-text password to hash and set.</param>
-    protected void SetPassword(string password)
+    private void SetPassword(string password)
     {
         PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
     }

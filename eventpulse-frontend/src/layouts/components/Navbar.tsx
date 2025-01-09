@@ -20,9 +20,9 @@ const Navbar: React.FC = () => {
             <div className="max-w-screen flex flex-wrap items-center justify-between mx-auto p-4">
                 {/* Logo */}
                 <a href="/" className="flex items-center space-x-3">
-          <span className="self-center text-2xl font-semibold text-gray-800">
-            EventPulse
-          </span>
+                  <span className="self-center text-2xl font-semibold text-gray-800">
+                    Event Pulse
+                  </span>
                 </a>
 
                 {/* Right Section: Buttons */}
@@ -36,7 +36,8 @@ const Navbar: React.FC = () => {
                     <button
                         type="button"
                         onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-                        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg
+                        md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
                         aria-label="Toggle navigation"
                     >
                         <span className="sr-only">Open main menu</span>
@@ -65,7 +66,8 @@ const Navbar: React.FC = () => {
                     } md:flex md:w-auto items-center justify-between w-full`}
                     id="navbar-sticky"
                 >
-                    <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 md:flex-row md:mt-0 md:border-0 md:bg-white">
+                    <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50
+                     md:space-x-8 md:flex-row md:mt-0 md:border-0 md:bg-white">
                         {menuItems.map((item) => (
                             <li key={item.label}>
                                 <a

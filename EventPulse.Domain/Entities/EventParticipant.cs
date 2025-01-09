@@ -4,7 +4,7 @@ using EventPulse.Domain.Interfaces;
 
 namespace EventPulse.Domain.Entities;
 
-public class EventParticipant : IBaseEntity
+public sealed class EventParticipant : IBaseEntity
 {
     public EventParticipant(int eventId, int userId)
     {
@@ -21,11 +21,11 @@ public class EventParticipant : IBaseEntity
 
     [ForeignKey("EventId")]
     [InverseProperty("EventParticipants")]
-    public virtual Event Event { get; set; } = null!;
+    public Event Event { get; set; } = null!;
 
     [ForeignKey("UserId")]
     [InverseProperty("EventParticipants")]
-    public virtual User User { get; set; } = null!;
+    public User User { get; set; } = null!;
 
     [Key] public int Id { get; set; }
 }

@@ -1,6 +1,8 @@
+using EventPulse.Domain.Interfaces;
+
 namespace EventPulse.Application.Queries.Dtos;
 
-public class UserDto
+public class UserDto : IBaseEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;

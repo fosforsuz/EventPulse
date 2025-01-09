@@ -29,6 +29,20 @@ public partial class EventPulseContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Category>(builder =>
+        {
+            builder.HasKey(e => e.Id).HasName("PK__Category__3214EC07A1C8F3A7");
+
+            builder.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            builder.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
+
+            builder.HasMany(e => e.Events).WithOne(e => e.Category)
+                .HasForeignKey(e => e.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Events__Category__5CD6CB2B");
+        });
+
         modelBuilder.Entity<Event>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Events__3214EC07ED8162D3");

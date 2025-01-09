@@ -4,7 +4,7 @@ using EventPulse.Domain.Interfaces;
 
 namespace EventPulse.Domain.Entities;
 
-public class Event : IBaseEntity
+public sealed class Event : IBaseEntity
 {
     public Event(string title, string? description, string location, DateTime eventDate, int creatorId, bool isDeleted,
         bool isCompleted)
@@ -19,15 +19,19 @@ public class Event : IBaseEntity
         CreatedAt = DateTime.Now;
     }
 
-    [StringLength(200)] public string Title { get; set; } = null!;
+    [StringLength(200)] public string Title { get; set; }
 
     public string? Description { get; set; }
 
-    [StringLength(200)] public string Location { get; set; } = null!;
+    [StringLength(200)] public string Location { get; set; }
+    
+    [StringLength(200)] public string? EventPhotoPath { get; set; }
 
     [Column(TypeName = "datetime")] public DateTime EventDate { get; set; }
 
     public int CreatorId { get; set; }
+
+    public int CategoryId { get; set; }
 
     [Column(TypeName = "datetime")] public DateTime? CreatedAt { get; set; }
 
@@ -38,13 +42,18 @@ public class Event : IBaseEntity
 
     [ForeignKey("CreatorId")]
     [InverseProperty("Events")]
-    public virtual User Creator { get; set; } = null!;
+    public User Creator { get; set; } = null!;
+
+    [ForeignKey("CategoryId")]
+    [InverseProperty("Events")]
+    public Category Category { get; set; } = null!;
+    
 
     [InverseProperty("Event")]
-    public virtual ICollection<EventParticipant> EventParticipants { get; set; } = new List<EventParticipant>();
+    public ICollection<EventParticipant> EventParticipants { get; set; } = new List<EventParticipant>();
 
     [InverseProperty("Event")]
-    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+    public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     [Key] public int Id { get; set; }
 

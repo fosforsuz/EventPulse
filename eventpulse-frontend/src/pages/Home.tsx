@@ -163,28 +163,28 @@ const RecentEvents: React.FC = () => {
                             key={event.id}
                             className="relative bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-xl"
                         >
-                            {/* Görsel */}
+                            {/* Image */}
                             <div className="relative">
                                 <img
                                     src={event.image}
                                     alt={event.title}
                                     className="w-full h-56 object-cover transition-transform duration-300 hover:scale-110"
                                 />
-                                {/* Kategori */}
+                                {/* Category */}
                                 <span
                                     className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
                                       Workshop
                                     </span>
                             </div>
 
-                            {/* Etkinlik Detayları */}
+                            {/* Event Details */}
                             <div className="p-6">
                                 <h3 className="text-xl font-bold text-gray-800 mb-2">{event.title}</h3>
 
                                 {/* Description */}
                                 <p className="text-gray-600 text-sm mb-4">{event.description}</p>
 
-                                {/* Tarih ve Lokasyon */}
+                                {/* Date ve Location */}
                                 <div className="flex items-center text-gray-600 text-sm mb-2">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -220,7 +220,7 @@ const RecentEvents: React.FC = () => {
                                     {event.location}
                                 </div>
 
-                                {/* Buton */}
+                                {/* Button */}
                                 <button
                                     className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg flex items-center justify-center hover:bg-blue-700 transition shadow-md"
                                 >

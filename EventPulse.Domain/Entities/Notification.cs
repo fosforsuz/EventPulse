@@ -4,7 +4,7 @@ using EventPulse.Domain.Interfaces;
 
 namespace EventPulse.Domain.Entities;
 
-public class Notification : IBaseEntity
+public sealed class Notification : IBaseEntity
 {
     public Notification(int eventId, string message)
     {
@@ -25,7 +25,7 @@ public class Notification : IBaseEntity
 
     [ForeignKey("EventId")]
     [InverseProperty("Notifications")]
-    public virtual Event Event { get; set; } = null!;
+    public Event Event { get; set; } = null!;
 
     [Key] public int Id { get; set; }
 
