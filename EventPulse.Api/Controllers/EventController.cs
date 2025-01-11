@@ -78,7 +78,7 @@ public class EventController : ControllerBase
                 new { id = result.Value, message = "Event created successfully." });
 
         var errorMessage = string.Join(", ", result.Errors.Select(error => error.Message));
-        return BadRequest(ResponseModel.Error(errorMessage));
+            return BadRequest(ResponseModel.Error(errorMessage));
     }
 
     [HttpPut]

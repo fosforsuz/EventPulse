@@ -13,6 +13,7 @@ internal sealed class UnitOfWork : IUnitOfWork
     private IEventRepository? _eventRepository;
     private INotificationRepository? _notificationRepository;
     private IUserRepository? _userRepository;
+    private ICategoryRepository? _categoryRepository;
 
     public UnitOfWork(EventPulseContext context)
     {
@@ -28,6 +29,8 @@ internal sealed class UnitOfWork : IUnitOfWork
         _notificationRepository ??= new NotificationRepository(_context);
 
     public IUserRepository UserRepository => _userRepository ??= new UserRepository(_context);
+
+    public ICategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(_context);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EventPulse.Domain.Interfaces;
 
 namespace EventPulse.Domain.Entities;
 
-public sealed class Category
+public sealed class Category : IBaseEntity
 {
     [Key] public int Id { get; set; }
     public string Name { get; set; }
@@ -26,4 +27,5 @@ public sealed class Category
         Description = description;
         ModifiedAt = DateTime.Now;
     }
+    
 }

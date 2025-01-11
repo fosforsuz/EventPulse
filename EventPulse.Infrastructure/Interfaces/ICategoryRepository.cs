@@ -1,6 +1,5 @@
+using EventPulse.Domain.Entities;
+
 namespace EventPulse.Infrastructure.Interfaces;
 
-public class ICategoryRepository
-{
-    
-}
+public interface ICategoryRepository : IRepository<Category>;

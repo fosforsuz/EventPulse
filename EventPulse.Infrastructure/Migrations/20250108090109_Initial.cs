@@ -12,7 +12,7 @@ namespace EventPulse.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Category",
+                name: "Categor",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
