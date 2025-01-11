@@ -23,5 +23,10 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
 
         RuleFor(x => x.CreatorId)
             .NotEmpty().WithMessage("Creator is required.");
+
+        RuleFor(x => x.CategoryId)
+            .NotEmpty()
+            .WithMessage("Category is required.")
+            .GreaterThan(0).WithMessage("Category is required.");
     }
 }

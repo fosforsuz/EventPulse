@@ -23,5 +23,9 @@ public class UpdateEventCommandValidator : AbstractValidator<UpdateEventCommand>
 
         RuleFor(x => x.EventDate)
             .NotEmpty();
+
+        RuleFor(x => x.CategoryId)
+            .NotEmpty().WithMessage("Category is required.")
+            .GreaterThan(0).WithMessage("Category is required.");
     }
 }

@@ -28,7 +28,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, Res
 
         var newEvent = new Domain.Entities.Event(request.Title, request.Description,
             request.Location, request.EventDate, request.CreatorId, false,
-            false);
+            false, categoryId: request.CategoryId);
 
         await _unitOfWork.EventRepository.AddAsync(newEvent);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -8,5 +8,6 @@ public abstract record CreateEventCommand(
     string? Description,
     string Location,
     DateTime EventDate,
-    int CreatorId)
+    int CreatorId,
+    int CategoryId)
     : IRequest<Result<int>>;

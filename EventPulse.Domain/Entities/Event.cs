@@ -7,13 +7,14 @@ namespace EventPulse.Domain.Entities;
 public sealed class Event : IBaseEntity
 {
     public Event(string title, string? description, string location, DateTime eventDate, int creatorId, bool isDeleted,
-        bool isCompleted)
+        bool isCompleted, int categoryId)
     {
         Title = title;
         Description = description;
         Location = location;
         EventDate = eventDate;
         CreatorId = creatorId;
+        CategoryId = categoryId;
         IsDeleted = isDeleted;
         IsCompleted = isCompleted;
         CreatedAt = DateTime.Now;
@@ -24,7 +25,7 @@ public sealed class Event : IBaseEntity
     public string? Description { get; set; }
 
     [StringLength(200)] public string Location { get; set; }
-    
+
     [StringLength(200)] public string? EventPhotoPath { get; set; }
 
     [Column(TypeName = "datetime")] public DateTime EventDate { get; set; }
@@ -47,7 +48,7 @@ public sealed class Event : IBaseEntity
     [ForeignKey("CategoryId")]
     [InverseProperty("Events")]
     public Category Category { get; set; } = null!;
-    
+
 
     [InverseProperty("Event")]
     public ICollection<EventParticipant> EventParticipants { get; set; } = new List<EventParticipant>();
@@ -57,13 +58,14 @@ public sealed class Event : IBaseEntity
 
     [Key] public int Id { get; set; }
 
-    public void Update(string title, string? description, string location, DateTime eventDate)
+    public void Update(string title, string? description, string location, DateTime eventDate, int categoryId)
     {
         Title = title;
         Description = description;
         Location = location;
         EventDate = eventDate;
         UpdatedAt = DateTime.Now;
+        CategoryId = categoryId;
     }
 
     public void Delete()
