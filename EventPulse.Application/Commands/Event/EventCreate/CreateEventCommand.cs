@@ -3,11 +3,20 @@ using MediatR;
 
 namespace EventPulse.Application.Commands.Event.EventCreate;
 
-public abstract record CreateEventCommand(
-    string Title,
-    string? Description,
-    string Location,
-    DateTime EventDate,
-    int CreatorId,
-    int CategoryId)
-    : IRequest<Result<int>>;
+public class CreateEventCommand : IRequest<Result<int>>
+{
+    public string Title { get; } = null!;
+    public string? Description { get; }
+    public string Location { get; } = null!;
+    public DateTime EventDate { get; }
+    public int CreatorId { get; }
+    public int CategoryId { get; }
+    public Stream? ImageStream { get; private set; }
+
+
+    public void SetImageStream(Stream imageStream)
+    {
+        ImageStream = imageStream;
+    }
+
+}

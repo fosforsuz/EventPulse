@@ -1,3 +1,4 @@
+using EventPulse.Application.Interfaces;
 using EventPulse.Infrastructure.Interfaces;
 using FluentResults;
 using FluentValidation;
@@ -9,11 +10,13 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, Res
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IValidator<CreateEventCommand> _validator;
+    private readonly IFileStorageService _fileStorageService;
 
-    public CreateEventCommandHandler(IUnitOfWork unitOfWork, IValidator<CreateEventCommand> validator)
+    public CreateEventCommandHandler(IUnitOfWork unitOfWork, IValidator<CreateEventCommand> validator, IFileStorageService fileStorageService)
     {
         _unitOfWork = unitOfWork;
         _validator = validator;
+        _fileStorageService = fileStorageService;
     }
 
     public async Task<Result<int>> Handle(CreateEventCommand request, CancellationToken cancellationToken)
@@ -32,6 +35,13 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, Res
 
         await _unitOfWork.EventRepository.AddAsync(newEvent);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (request.ImageStream is not null)
+        {
+            var filePath = _fileStorageService.SaveFile(newEvent.Id, request.ImageStream);
+            newEvent.SetImagePath(filePath);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
 
         return Result.Ok(newEvent.Id);
     }

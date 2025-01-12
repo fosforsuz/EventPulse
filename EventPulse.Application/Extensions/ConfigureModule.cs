@@ -1,4 +1,5 @@
 using System.Reflection;
+using EventPulse.Application.Modals;
 using EventPulse.Infrastructure.Extensions;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
@@ -14,17 +15,23 @@ public static class ConfigureModule
         var (secret, issuer, audience) = GetSecretAndIssuer(configuration);
         services.ConfigureInfrastructure(GetConnectionString(configuration), secret,
             issuer, audience);
-        services.ConfigureApplication();
+        services.ConfigureApplication(configuration: configuration);
     }
 
-    private static void ConfigureApplication(this IServiceCollection services)
+    private static void ConfigureApplication(this IServiceCollection services, IConfiguration configuration)
     {
+        services.ConfigureFileStoragePath(configuration);
         services.ConfigureValidators();
     }
 
     private static void ConfigureValidators(this IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+    }
+
+    private static void ConfigureFileStoragePath(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<FileStorageSettings>(configuration.GetSection("FileStorageSettings"));
     }
 
     private static string GetConnectionString(IConfiguration configuration)

@@ -68,17 +68,23 @@ public class EventController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateEvent([FromBody] CreateEventCommand request)
+    public async Task<IActionResult> CreateEvent([FromBody] CreateEventCommand request, [FromBody] IFormFile eventImage)
     {
-        if (await _mediator.Send(request) is not { } result)
-            return BadRequest(ResponseModel.Error("An error occurred while creating the event."));
+        // 1. Validasyonlar
+        var validationResult = ValidateEventImage(eventImage);
+        if (!validationResult.IsSuccess)
+            return BadRequest(validationResult.Message);
 
-        if (result.IsSuccess)
-            return CreatedAtAction(nameof(GetEventById),
-                new { id = result.Value, message = "Event created successfully." });
+        // 2. Görseli işle ve komuta aktar
+        request.SetImageStream(eventImage.OpenReadStream());
 
-        var errorMessage = string.Join(", ", result.Errors.Select(error => error.Message));
-            return BadRequest(ResponseModel.Error(errorMessage));
+        // 3. Komutu işleyip sonucu kontrol et
+        var result = await _mediator.Send(request);
+        if (result is null || !result.IsSuccess)
+            return BadRequest(ResponseModel.Error(result?.Errors?.FirstOrDefault()?.Message ?? "An error occurred while creating the event."));
+
+        // 4. Başarılı yanıt döndür
+        return CreatedAtAction(nameof(GetEventById), new { id = result.Value }, ResponseModel.Success("Event created successfully."));
     }
 
     [HttpPut]
@@ -104,4 +110,22 @@ public class EventController : ControllerBase
         var errorMessage = string.Join(", ", result.Errors.Select(error => error.Message));
         return BadRequest(ResponseModel.Error(errorMessage));
     }
+
+    private (bool IsSuccess, string Message) ValidateEventImage(IFormFile eventImage)
+    {
+        if (eventImage is null || eventImage.Length == 0)
+            return (false, "Event image is required.");
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+        var fileExtension = Path.GetExtension(eventImage.FileName).ToLower();
+
+        if (!allowedExtensions.Contains(fileExtension))
+            return (false, "Unsupported file type.");
+
+        if (eventImage.Length > 2 * 1024 * 1024)
+            return (false, "File size cannot exceed 2MB.");
+
+        return (true, string.Empty);
+    }
+
 }

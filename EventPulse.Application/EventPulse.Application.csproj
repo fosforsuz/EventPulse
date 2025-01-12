@@ -7,19 +7,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EventPulse.Infrastructure\EventPulse.Infrastructure.csproj"/>
+        <ProjectReference Include="..\EventPulse.Infrastructure\EventPulse.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3"/>
-        <PackageReference Include="FluentResults" Version="3.16.0"/>
-        <PackageReference Include="FluentValidation" Version="11.11.0"/>
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0"/>
-        <PackageReference Include="MediatR" Version="12.4.1"/>
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+        <PackageReference Include="FluentResults" Version="3.16.0" />
+        <PackageReference Include="FluentValidation" Version="11.11.0" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+        <PackageReference Include="MediatR" Version="12.4.1" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Queries\User\"/>
+        <Folder Include="Queries\User\" />
     </ItemGroup>
 
 </Project>

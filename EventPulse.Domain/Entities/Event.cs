@@ -79,4 +79,9 @@ public sealed class Event : IBaseEntity
         IsCompleted = true;
         UpdatedAt = DateTime.Now;
     }
+
+    public void SetImagePath(string path)
+    {
+        EventPhotoPath = path;
+    }
 }

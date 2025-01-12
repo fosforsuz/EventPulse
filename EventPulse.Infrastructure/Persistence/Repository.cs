@@ -32,6 +32,13 @@ public class Repository<T> : IRepository<T> where T : class, IBaseEntity
             .ToListAsync();
     }
 
+    public async Task<List<TResult>> GetAsync<TResult>(Expression<Func<T, bool>> predicate,
+        Expression<Func<T, TResult>> selector, int skip, int take, bool tracking = false)
+    {
+        return await GetQueryable(tracking).Where(predicate).Select(selector)
+            .Skip(skip).Take(take).ToListAsync();
+    }
+
     public async Task<T?> GetSingleAsync(Expression<Func<T, bool>> predicate, bool tracking = false)
     {
         return await GetQueryable(tracking).SingleOrDefaultAsync(predicate);
