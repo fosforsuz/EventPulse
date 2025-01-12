@@ -2,9 +2,12 @@ using EventPulse.Api.Models;
 using EventPulse.Application.Commands.Event.EventCreate;
 using EventPulse.Application.Commands.Event.EventDelete;
 using EventPulse.Application.Commands.Event.EventUpdate;
+using EventPulse.Application.Queries.Dtos;
 using EventPulse.Application.Queries.Event;
 using EventPulse.Application.Queries.Event.GetActiveEvents;
+using EventPulse.Application.Queries.Event.GetPaginatedEvents;
 using EventPulse.Application.Queries.Event.GetPastEvents;
+using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,12 +24,13 @@ public class EventController : ControllerBase
         _mediator = mediator;
     }
 
-
     [HttpGet]
     [Route("active-events")]
-    public async Task<IActionResult> GetActiveEvents()
+    public async Task<IActionResult> GetActiveEvents([FromQuery] GetPaginatedEventsQuery request)
     {
-        if (await _mediator.Send(new GetActiveEventsQuery()) is not { } result)
+        request.GetUncompletedEvents();
+
+        if (await _mediator.Send(request) is not Result<List<EventDto>> result)
             return BadRequest(ResponseModel.Error("An error occurred while getting the events."));
 
         if (result.IsSuccess)
@@ -38,9 +42,11 @@ public class EventController : ControllerBase
 
     [HttpGet]
     [Route("past-events")]
-    public async Task<IActionResult> GetPastEvents()
+    public async Task<IActionResult> GetPastEvents([FromQuery] GetPaginatedEventsQuery request)
     {
-        if (await _mediator.Send(new GetPastEventsQuery()) is not { } result)
+        request.GetCompletedEvents();
+
+        if (await _mediator.Send(request) is not Result<List<EventDto>> result)
             return BadRequest(ResponseModel.Error("An error occurred while getting the events."));
 
         if (result.IsSuccess)

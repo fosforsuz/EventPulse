@@ -1,10 +1,9 @@
 using EventPulse.Application.Queries.Dtos;
-using EventPulse.Application.Queries.Event.GetPaginatedEvents;
 using EventPulse.Infrastructure.Interfaces;
 using FluentResults;
 using MediatR;
 
-namespace EventPulse.Application.Queries.Event.GetPaginatedActiveEvents;
+namespace EventPulse.Application.Queries.Event.GetPaginatedEvents;
 
 public class
     GetPaginatedEventsQueryHandler : IRequestHandler<GetPaginatedEventsQuery, Result<List<EventDto>>>
@@ -20,7 +19,7 @@ public class
         CancellationToken cancellationToken)
     {
         var events = await _unitOfWork.EventRepository.GetAsync(
-            predicate: @event => !@event.IsCompleted && !@event.IsDeleted,
+            predicate: @event => @event.IsCompleted == request.IsCompleted && !@event.IsDeleted,
             selector: @event => new EventDto()
             {
                 Id = @event.Id,
