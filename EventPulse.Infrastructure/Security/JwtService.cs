@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using EventPulse.Infrastructure.Modals;
 using Microsoft.IdentityModel.Tokens;
 
 namespace EventPulse.Infrastructure.Security;
@@ -18,7 +19,7 @@ internal class JwtService : IJwtService
         _audience = audience;
     }
 
-    public string GenerateToken(int userId, string role, string name, string email)
+    public AuthanticateResponse GenerateToken(int userId, string role, string name, string email)
     {
         var claims = new[]
         {
@@ -31,14 +32,18 @@ internal class JwtService : IJwtService
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+        var expireDate = DateTime.Now.AddHours(1);
+
         var token = new JwtSecurityToken(
             _issuer,
             _audience,
             claims,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: expireDate,
             signingCredentials: creds
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+        return new AuthanticateResponse(tokenString, expireDate);
     }
 }

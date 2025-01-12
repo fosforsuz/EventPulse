@@ -1,11 +1,13 @@
 using EventPulse.Infrastructure.Interfaces;
+using EventPulse.Infrastructure.Modals;
 using EventPulse.Infrastructure.Security;
 using FluentResults;
 using FluentValidation;
+using MediatR;
 
 namespace EventPulse.Application.Commands.Authenticate;
 
-public class AuthenticateCommandHandler
+public class AuthenticateCommandHandler : IRequestHandler<AuthenticateCommand, Result<AuthanticateResponse>>
 {
     private readonly IJwtService _jwtService;
     private readonly IUnitOfWork _unitOfWork;
@@ -19,19 +21,19 @@ public class AuthenticateCommandHandler
         _validator = validator;
     }
 
-    public async Task<Result<string>> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AuthanticateResponse>> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
-            return Result.Fail<string>("Validation failed.")
+            return Result.Fail<AuthanticateResponse>("Validation failed.")
                 .WithErrors(validationResult.Errors.Select(error => error.ErrorMessage));
 
         var user = await _unitOfWork.UserRepository.GetSingleAsync(user =>
             user.Email == request.Email && !user.IsDeleted);
 
         if (user == null || !user.Authenticate(request.Password))
-            return Result.Fail<string>("Invalid email or password.");
+            return Result.Fail<AuthanticateResponse>("Invalid email or password.");
 
 
         var token = _jwtService.GenerateToken(user.Id, user.Role, user.Name, user.Email);

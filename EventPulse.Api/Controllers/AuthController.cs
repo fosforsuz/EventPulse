@@ -117,7 +117,7 @@ public class AuthController : ControllerBase
     [Route("verify-email")]
     [Description("Verify email")]
     [MapToApiVersion(1)]
-    [Authorize]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status401Unauthorized)]
