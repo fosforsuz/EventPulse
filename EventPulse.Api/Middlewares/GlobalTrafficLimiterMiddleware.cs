@@ -5,10 +5,16 @@ namespace EventPulse.Api.Middlewares;
 
 /// <summary>
 /// Middleware to limit the number of concurrent requests globally using a semaphore.
+/// Helps prevent the system from being overwhelmed under high load.
 /// </summary>
 public class GlobalTrafficLimiterMiddleware
 {
     private readonly RequestDelegate _next;
+
+    /// <summary>
+    /// A semaphore to restrict the number of concurrent requests.
+    /// The maximum limit is set to 500 requests.
+    /// </summary>
     private static readonly SemaphoreSlim _semaphore = new(500);
 
     /// <summary>
@@ -21,17 +27,19 @@ public class GlobalTrafficLimiterMiddleware
     }
 
     /// <summary>
-    /// Invokes the middleware to process the HTTP request.
+    /// Middleware logic to limit the number of concurrent requests.
+    /// If the request cannot acquire the semaphore, it returns a 503 Service Unavailable response.
     /// </summary>
-    /// <param name="context">The HTTP context.</param>
+    /// <param name="context">The HTTP context for the current request.</param>
     /// <returns>A task that represents the completion of request processing.</returns>
     public async Task Invoke(HttpContext context)
     {
-        // If the semaphore is not available, return a 503 Service Unavailable response
+        // Attempt to acquire the semaphore without waiting.
         if (!await _semaphore.WaitAsync(0))
         {
-            // semaphor can't be acquired, return 503
+            // Semaphore can't be acquired, return 503 Service Unavailable response.
             context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+            context.Response.Headers.Append("Retry-After", "10"); // Suggest retrying after 10 seconds.
             var errorMessage = "The system is currently under high load. Please try again later.";
             var generalResponse = ResponseModel.Error(errorMessage).ToString();
             await context.Response.WriteAsync(generalResponse ?? string.Empty);
@@ -40,12 +48,12 @@ public class GlobalTrafficLimiterMiddleware
 
         try
         {
-            // Access the next middleware in the pipeline
+            // Pass the request to the next middleware in the pipeline.
             await _next(context);
         }
         finally
         {
-            // Release the semaphore when the request is done
+            // Ensure the semaphore is released even if an exception occurs.
             _semaphore.Release();
         }
     }

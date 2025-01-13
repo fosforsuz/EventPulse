@@ -5,44 +5,56 @@ using EventPulse.Api.Models;
 namespace EventPulse.Api.Middlewares;
 
 /// <summary>
-/// Middleware to limit the rate of event search requests from a single IP address.
-/// Helps prevent system overload by restricting frequent requests.
+/// Middleware to limit the rate of POST requests to the "/api/events/join" endpoint.
+/// Helps prevent high load on the system by restricting requests from individual IPs.
 /// </summary>
-public class EventSearchTrafficLimiterMiddleware : IDisposable
+public class EventJoinTrafficLimiterMiddleware : IDisposable
 {
     private readonly RequestDelegate _next;
-    private readonly ConcurrentDictionary<string, RateLimitModal> _rateLimitDictionary = new();
+    private static readonly ConcurrentDictionary<string, RateLimitModal> _rateLimitDictionary = new();
     private readonly Timer _cleanupTimer;
     private bool _disposed = false;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EventSearchTrafficLimiterMiddleware"/> class.
+    /// Initializes a new instance of the <see cref="EventJoinTrafficLimiterMiddleware"/> class.
     /// Sets up a timer to periodically clean up expired entries from the rate limit dictionary.
     /// </summary>
     /// <param name="next">The next middleware in the request pipeline.</param>
-    public EventSearchTrafficLimiterMiddleware(RequestDelegate next)
+    public EventJoinTrafficLimiterMiddleware(RequestDelegate next)
     {
         _next = next;
-        // Timer cleans up expired entries every 1 minute.
-        _cleanupTimer = new Timer(_ => CleanUpRateLimitDictionary(), null, 0, (int)TimeSpan.FromMinutes(1).TotalMilliseconds);
+        // Timer to clean up entries older than 1 hour every hour.
+        _cleanupTimer = new Timer(_ => CleanUpRateLimitDictionary(), null, 0, (int)TimeSpan.FromHours(1).TotalMilliseconds);
     }
 
     /// <summary>
-    /// Middleware invocation logic to monitor and limit request rates per IP address.
-    /// Returns a 503 status code if the rate limit is exceeded.
+    /// Middleware logic to enforce rate limits on POST requests to "/api/events/join".
+    /// Returns a 503 Service Unavailable status if the limit is exceeded.
     /// </summary>
     /// <param name="context">The HTTP context for the current request.</param>
-    /// <returns>A task that represents the completion of request handling.</returns>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task Invoke(HttpContext context)
     {
-        // Retrieve the client's IP address from the HTTP context.
+        // Extract request path and method for validation.
+        var request = context.Request;
+        var requestPath = request.Path.ToString();
+        var requestMethod = request.Method;
+
+        // Proceed to the next middleware if the request is not a POST to "/api/events/join".
+        if (requestPath != "/api/events/join" || requestMethod != "POST")
+        {
+            await _next(context);
+            return;
+        }
+
+        // Retrieve the client's IP address.
         var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
 
         // Check if the IP address already exists in the dictionary.
         if (_rateLimitDictionary.TryGetValue(ipAddress, out var rateLimitModal))
         {
             // If the request count exceeds the limit, return a 503 Service Unavailable response.
-            if (rateLimitModal.RequestCount >= 20)
+            if (rateLimitModal.RequestCount >= 2)
             {
                 context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
                 context.Response.Headers.Append("Retry-After", "60"); // Retry after 60 seconds.
@@ -70,12 +82,12 @@ public class EventSearchTrafficLimiterMiddleware : IDisposable
     /// Cleans up expired entries in the rate limit dictionary.
     /// Removes entries that have not been updated in the last 1 minute.
     /// </summary>
-    private void CleanUpRateLimitDictionary()
+    private static void CleanUpRateLimitDictionary()
     {
         var now = DateTime.UtcNow;
-        foreach (var key in _rateLimitDictionary.Keys)
+        foreach (var (key, value) in _rateLimitDictionary)
         {
-            if ((now - _rateLimitDictionary[key].LastRequest).TotalMinutes > 1)
+            if (now - value.LastRequest > TimeSpan.FromMinutes(1))
             {
                 _rateLimitDictionary.TryRemove(key, out _);
             }
@@ -83,7 +95,7 @@ public class EventSearchTrafficLimiterMiddleware : IDisposable
     }
 
     /// <summary>
-    /// Disposes the middleware resources, including the cleanup timer.
+    /// Releases all resources used by the middleware, including the cleanup timer.
     /// </summary>
     public void Dispose()
     {
@@ -92,9 +104,9 @@ public class EventSearchTrafficLimiterMiddleware : IDisposable
     }
 
     /// <summary>
-    /// Releases the managed and unmanaged resources used by the middleware.
+    /// Disposes the managed and unmanaged resources used by the middleware.
     /// </summary>
-    /// <param name="disposing">Indicates whether managed resources should be disposed.</param>
+    /// <param name="disposing">Indicates whether to release managed resources.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (!_disposed)
@@ -112,7 +124,7 @@ public class EventSearchTrafficLimiterMiddleware : IDisposable
     /// <summary>
     /// Destructor to ensure resources are released if Dispose is not called.
     /// </summary>
-    ~EventSearchTrafficLimiterMiddleware()
+    ~EventJoinTrafficLimiterMiddleware()
     {
         Dispose(false);
     }
