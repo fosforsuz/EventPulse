@@ -53,7 +53,7 @@ public class ExceptionMiddleware
         httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
         // Create a standardized error response message.
-        var errorResponse = ResponseModel.Error("An error occurred")?.ToString() ?? "An error occurred";
+        var errorResponse = ResponseModel.Error(ex.Message)?.ToString() ?? "An error occurred";
 
         // Write the error response to the HTTP response body.
         return httpContext.Response.WriteAsync(errorResponse);
