@@ -7,13 +7,13 @@ namespace EventPulse.Infrastructure.Persistence;
 internal sealed class UnitOfWork : IUnitOfWork
 {
     private readonly DbContext _context;
+    private ICategoryRepository? _categoryRepository;
     private bool _disposed;
     private IEventParticipantRepository? _eventParticipantRepository;
 
     private IEventRepository? _eventRepository;
     private INotificationRepository? _notificationRepository;
     private IUserRepository? _userRepository;
-    private ICategoryRepository? _categoryRepository;
 
     public UnitOfWork(EventPulseContext context)
     {

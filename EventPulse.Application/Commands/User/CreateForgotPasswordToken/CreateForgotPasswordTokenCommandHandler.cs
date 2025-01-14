@@ -15,8 +15,8 @@ public class CreateForgotPasswordTokenCommandHandler : IRequestHandler<CreateFor
 
     public async Task<Result<int>> Handle(CreateForgotPasswordTokenCommand request, CancellationToken cancellationToken)
     {
-        var user = await _unitOfWork.UserRepository.GetSingleAsync(@user =>
-            @user.Email.Equals(request.Email) && !@user.IsDeleted);
+        var user = await _unitOfWork.UserRepository.GetSingleAsync(user =>
+            user.Email.Equals(request.Email) && !user.IsDeleted);
 
         if (user is null)
             return Result.Fail<int>("User not found");
@@ -25,7 +25,7 @@ public class CreateForgotPasswordTokenCommandHandler : IRequestHandler<CreateFor
 
         await _unitOfWork.UserRepository.UpdateAsync(user);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(user.Id);
     }

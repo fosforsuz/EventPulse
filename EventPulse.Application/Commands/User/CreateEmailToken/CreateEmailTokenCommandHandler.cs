@@ -1,4 +1,3 @@
-using EventPulse.Application.Commands.User.VerifyEmailToken;
 using EventPulse.Infrastructure.Interfaces;
 using FluentResults;
 using MediatR;
@@ -19,7 +18,7 @@ public class CreateEmailTokenCommandHandler : IRequestHandler<CreateEmailTokenCo
         if (request.Id <= 0)
             return Result.Fail<int>("Invalid user id");
 
-        var user = await _unitOfWork.UserRepository.GetSingleAsync(@user => @user.Id == request.Id && !@user.IsDeleted);
+        var user = await _unitOfWork.UserRepository.GetSingleAsync(user => user.Id == request.Id && !user.IsDeleted);
 
         if (user is null)
             return Result.Fail<int>("User not found");
@@ -27,7 +26,7 @@ public class CreateEmailTokenCommandHandler : IRequestHandler<CreateEmailTokenCo
         user.CreateVerificationToken();
 
         await _unitOfWork.UserRepository.UpdateAsync(user);
-        await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(user.Id);
     }

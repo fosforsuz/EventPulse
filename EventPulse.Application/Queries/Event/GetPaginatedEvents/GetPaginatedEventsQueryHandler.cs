@@ -19,8 +19,8 @@ public class
         CancellationToken cancellationToken)
     {
         var events = await _unitOfWork.EventRepository.GetAsync(
-            predicate: @event => @event.IsCompleted == request.IsCompleted && !@event.IsDeleted,
-            selector: @event => new EventDto()
+            @event => @event.IsCompleted == request.IsCompleted && !@event.IsDeleted,
+            @event => new EventDto
             {
                 Id = @event.Id,
                 Title = @event.Title,
@@ -30,9 +30,9 @@ public class
                 Location = @event.Location,
                 IsCompleted = @event.IsCompleted
             },
-            skip: 0,
-            take: 12,
-            tracking: false
+            0,
+            12,
+            false
         );
 
         return Result.Ok(events);

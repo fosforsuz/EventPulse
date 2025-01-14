@@ -18,5 +18,4 @@ public class CreateEventCommand : IRequest<Result<int>>
     {
         ImageStream = imageStream;
     }
-
 }

@@ -18,8 +18,8 @@ public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, Res
         CancellationToken cancellationToken)
     {
         var categories = await _unitOfWork.CategoryRepository.GetAsync(
-            predicate: category => true,
-            selector: category => new CategoryDto()
+            category => true,
+            category => new CategoryDto
                 { Id = category.Id, Name = category.Name, Description = category.Description });
 
         return Result.Ok(categories.ToList());

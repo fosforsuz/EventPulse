@@ -21,7 +21,8 @@ public class AuthenticateCommandHandler : IRequestHandler<AuthenticateCommand, R
         _validator = validator;
     }
 
-    public async Task<Result<AuthanticateResponse>> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AuthanticateResponse>> Handle(AuthenticateCommand request,
+        CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 

@@ -33,7 +33,7 @@ public class CategoryController : ControllerBase
         var result = await _mediator.Send(new GetCategoriesQuery(), HttpContext.RequestAborted);
 
         if (result.IsSuccess)
-            return Ok(ResponseModel.Success(data: result.Value ?? new object()));
+            return Ok(ResponseModel.Success(result.Value ?? new object()));
 
         return BadRequest(ResponseModel.Error("Failed to get categories"));
     }

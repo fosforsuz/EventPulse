@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 namespace EventPulse.Domain.Entities;
 
 /// <summary>
-/// Represents a user entity within the system, including properties for authentication,
-/// verification, and relationship mapping to associated events and participants.
+///     Represents a user entity within the system, including properties for authentication,
+///     verification, and relationship mapping to associated events and participants.
 /// </summary>
 [Index("Email", Name = "UQ__Users__A9D105341A680F55", IsUnique = true)]
 public sealed class User : IBaseEntity
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="User"/> class with the provided details.
+    ///     Initializes a new instance of the <see cref="User" /> class with the provided details.
     /// </summary>
     /// <param name="name">The name of the user.</param>
     /// <param name="email">The email address of the user.</param>
@@ -31,10 +31,13 @@ public sealed class User : IBaseEntity
 
     [StringLength(100)] public string Name { get; set; }
 
-    [Required, EmailAddress, StringLength(100)]
+    [Required]
+    [EmailAddress]
+    [StringLength(100)]
     public string Email { get; set; }
 
-    [Required, StringLength(100, MinimumLength = 6)]
+    [Required]
+    [StringLength(100, MinimumLength = 6)]
     public string PasswordHash { get; set; }
 
     [StringLength(50)] public string Role { get; set; }
@@ -67,7 +70,7 @@ public sealed class User : IBaseEntity
     [Key] public int Id { get; set; }
 
     /// <summary>
-    /// Updates the user's name and password hash, and updates the last modified timestamp.
+    ///     Updates the user's name and password hash, and updates the last modified timestamp.
     /// </summary>
     /// <param name="name">New name of the user.</param>
     /// <param name="passwordHash">New hashed password of the user.</param>
@@ -79,7 +82,7 @@ public sealed class User : IBaseEntity
     }
 
     /// <summary>
-    /// Creates a new email verification token with a set expiration time.
+    ///     Creates a new email verification token with a set expiration time.
     /// </summary>
     public void CreateVerificationToken()
     {
@@ -88,7 +91,7 @@ public sealed class User : IBaseEntity
     }
 
     /// <summary>
-    /// Marks the user's email as verified and sets the verification timestamp.
+    ///     Marks the user's email as verified and sets the verification timestamp.
     /// </summary>
     public void VerifyEmail()
     {
@@ -99,7 +102,7 @@ public sealed class User : IBaseEntity
     }
 
     /// <summary>
-    /// Resets the email verification token and clears its expiration time.
+    ///     Resets the email verification token and clears its expiration time.
     /// </summary>
     public void ResetVerificationToken()
     {
@@ -108,7 +111,7 @@ public sealed class User : IBaseEntity
     }
 
     /// <summary>
-    /// Generates a password reset token with an expiration time.
+    ///     Generates a password reset token with an expiration time.
     /// </summary>
     public void CreatePasswordResetToken()
     {
@@ -117,7 +120,7 @@ public sealed class User : IBaseEntity
     }
 
     /// <summary>
-    /// Resets the user's password and logs the reset timestamp.
+    ///     Resets the user's password and logs the reset timestamp.
     /// </summary>
     /// <param name="passwordHash">The new hashed password.</param>
     public void ResetPassword(string passwordHash)
@@ -127,7 +130,7 @@ public sealed class User : IBaseEntity
     }
 
     /// <summary>
-    /// Resets the password reset token and clears its expiration time.
+    ///     Resets the password reset token and clears its expiration time.
     /// </summary>
     public void ResetPasswordToken()
     {
@@ -136,7 +139,7 @@ public sealed class User : IBaseEntity
     }
 
     /// <summary>
-    /// Marks the user as deleted and updates the last modified timestamp.
+    ///     Marks the user as deleted and updates the last modified timestamp.
     /// </summary>
     public void Delete()
     {
@@ -145,7 +148,7 @@ public sealed class User : IBaseEntity
     }
 
     /// <summary>
-    /// Authenticates the user by verifying the provided password against the stored hash.
+    ///     Authenticates the user by verifying the provided password against the stored hash.
     /// </summary>
     /// <param name="password">The plain-text password to verify.</param>
     /// <returns>True if the password is correct; otherwise, false.</returns>
@@ -155,7 +158,7 @@ public sealed class User : IBaseEntity
     }
 
     /// <summary>
-    /// Sets a new password by hashing it.
+    ///     Sets a new password by hashing it.
     /// </summary>
     /// <param name="password">The plain-text password to hash and set.</param>
     private void SetPassword(string password)

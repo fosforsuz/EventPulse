@@ -85,10 +85,12 @@ public class EventController : ControllerBase
         // 3. Komutu işleyip sonucu kontrol et
         var result = await _mediator.Send(request);
         if (result is null || !result.IsSuccess)
-            return BadRequest(ResponseModel.Error(result?.Errors?.FirstOrDefault()?.Message ?? "An error occurred while creating the event."));
+            return BadRequest(ResponseModel.Error(result?.Errors?.FirstOrDefault()?.Message ??
+                                                  "An error occurred while creating the event."));
 
         // 4. Başarılı yanıt döndür
-        return CreatedAtAction(nameof(GetEventById), new { id = result.Value }, ResponseModel.Success("Event created successfully."));
+        return CreatedAtAction(nameof(GetEventById), new { id = result.Value },
+            ResponseModel.Success("Event created successfully."));
     }
 
     [HttpPut]
@@ -131,5 +133,4 @@ public class EventController : ControllerBase
 
         return (true, string.Empty);
     }
-
 }

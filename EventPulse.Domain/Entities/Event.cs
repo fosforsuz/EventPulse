@@ -53,8 +53,7 @@ public sealed class Event : IBaseEntity
     [InverseProperty("Event")]
     public ICollection<EventParticipant> EventParticipants { get; set; } = new List<EventParticipant>();
 
-    [InverseProperty("Event")]
-    public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+    [InverseProperty("Event")] public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     [Key] public int Id { get; set; }
 

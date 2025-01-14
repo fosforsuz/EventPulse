@@ -1,35 +1,44 @@
-using System;
 using System.Collections.Concurrent;
 using EventPulse.Api.Models;
 
 namespace EventPulse.Api.Middlewares;
 
 /// <summary>
-/// Middleware to limit the rate of POST requests to the "/api/events/join" endpoint.
-/// Helps prevent high load on the system by restricting requests from individual IPs.
+///     Middleware to limit the rate of POST requests to the "/api/events/join" endpoint.
+///     Helps prevent high load on the system by restricting requests from individual IPs.
 /// </summary>
 public class EventJoinTrafficLimiterMiddleware : IDisposable
 {
-    private readonly RequestDelegate _next;
     private static readonly ConcurrentDictionary<string, RateLimitModal> _rateLimitDictionary = new();
     private readonly Timer _cleanupTimer;
-    private bool _disposed = false;
+    private readonly RequestDelegate _next;
+    private bool _disposed;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EventJoinTrafficLimiterMiddleware"/> class.
-    /// Sets up a timer to periodically clean up expired entries from the rate limit dictionary.
+    ///     Initializes a new instance of the <see cref="EventJoinTrafficLimiterMiddleware" /> class.
+    ///     Sets up a timer to periodically clean up expired entries from the rate limit dictionary.
     /// </summary>
     /// <param name="next">The next middleware in the request pipeline.</param>
     public EventJoinTrafficLimiterMiddleware(RequestDelegate next)
     {
         _next = next;
         // Timer to clean up entries older than 1 hour every hour.
-        _cleanupTimer = new Timer(_ => CleanUpRateLimitDictionary(), null, 0, (int)TimeSpan.FromHours(1).TotalMilliseconds);
+        _cleanupTimer = new Timer(_ => CleanUpRateLimitDictionary(), null, 0,
+            (int)TimeSpan.FromHours(1).TotalMilliseconds);
     }
 
     /// <summary>
-    /// Middleware logic to enforce rate limits on POST requests to "/api/events/join".
-    /// Returns a 503 Service Unavailable status if the limit is exceeded.
+    ///     Releases all resources used by the middleware, including the cleanup timer.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    ///     Middleware logic to enforce rate limits on POST requests to "/api/events/join".
+    ///     Returns a 503 Service Unavailable status if the limit is exceeded.
     /// </summary>
     /// <param name="context">The HTTP context for the current request.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
@@ -79,32 +88,19 @@ public class EventJoinTrafficLimiterMiddleware : IDisposable
     }
 
     /// <summary>
-    /// Cleans up expired entries in the rate limit dictionary.
-    /// Removes entries that have not been updated in the last 1 minute.
+    ///     Cleans up expired entries in the rate limit dictionary.
+    ///     Removes entries that have not been updated in the last 1 minute.
     /// </summary>
     private static void CleanUpRateLimitDictionary()
     {
         var now = DateTime.UtcNow;
         foreach (var (key, value) in _rateLimitDictionary)
-        {
             if (now - value.LastRequest > TimeSpan.FromMinutes(1))
-            {
                 _rateLimitDictionary.TryRemove(key, out _);
-            }
-        }
     }
 
     /// <summary>
-    /// Releases all resources used by the middleware, including the cleanup timer.
-    /// </summary>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    /// Disposes the managed and unmanaged resources used by the middleware.
+    ///     Disposes the managed and unmanaged resources used by the middleware.
     /// </summary>
     /// <param name="disposing">Indicates whether to release managed resources.</param>
     protected virtual void Dispose(bool disposing)
@@ -112,17 +108,15 @@ public class EventJoinTrafficLimiterMiddleware : IDisposable
         if (!_disposed)
         {
             if (disposing)
-            {
                 // Dispose of the cleanup timer.
                 _cleanupTimer.Dispose();
-            }
 
             _disposed = true;
         }
     }
 
     /// <summary>
-    /// Destructor to ensure resources are released if Dispose is not called.
+    ///     Destructor to ensure resources are released if Dispose is not called.
     /// </summary>
     ~EventJoinTrafficLimiterMiddleware()
     {

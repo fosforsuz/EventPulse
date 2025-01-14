@@ -19,22 +19,22 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         if (string.IsNullOrWhiteSpace(request.Password))
             return Result.Fail<int>("Password is required");
 
-        var user = await _unitOfWork.UserRepository.GetSingleAsync(@user =>
-            @user.PasswordResetToken == request.Token && !@user.IsDeleted);
+        var user = await _unitOfWork.UserRepository.GetSingleAsync(user =>
+            user.PasswordResetToken == request.Token && !user.IsDeleted);
 
         if (user is null)
             return Result.Fail<int>("Invalid token");
-        
+
         var now = DateTime.Now;
-        
+
         if (user.PasswordResetExpiresAt is null || user.PasswordResetExpiresAt < now)
             return Result.Fail<int>("Token has expired");
 
         user.ResetPassword(HashService.HashPassword(request.Password));
 
         await _unitOfWork.UserRepository.UpdateAsync(user);
-        await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
-        
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
         return Result.Ok(user.Id);
     }
 }

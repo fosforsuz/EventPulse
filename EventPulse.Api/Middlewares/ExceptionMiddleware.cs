@@ -4,15 +4,15 @@ using EventPulse.Api.Models;
 namespace EventPulse.Api.Middlewares;
 
 /// <summary>
-/// Middleware to handle exceptions globally in the application.
-/// Catches unhandled exceptions and returns a standardized error response.
+///     Middleware to handle exceptions globally in the application.
+///     Catches unhandled exceptions and returns a standardized error response.
 /// </summary>
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ExceptionMiddleware"/> class.
+    ///     Initializes a new instance of the <see cref="ExceptionMiddleware" /> class.
     /// </summary>
     /// <param name="next">The next middleware in the request pipeline.</param>
     public ExceptionMiddleware(RequestDelegate next)
@@ -21,8 +21,8 @@ public class ExceptionMiddleware
     }
 
     /// <summary>
-    /// Invokes the middleware to handle exceptions.
-    /// Passes the request to the next middleware and catches any exceptions thrown.
+    ///     Invokes the middleware to handle exceptions.
+    ///     Passes the request to the next middleware and catches any exceptions thrown.
     /// </summary>
     /// <param name="context">The HTTP context for the current request.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
@@ -41,7 +41,7 @@ public class ExceptionMiddleware
     }
 
     /// <summary>
-    /// Handles exceptions by returning a standardized error response.
+    ///     Handles exceptions by returning a standardized error response.
     /// </summary>
     /// <param name="httpContext">The HTTP context for the current request.</param>
     /// <param name="ex">The exception that occurred.</param>

@@ -8,11 +8,12 @@ namespace EventPulse.Application.Commands.Event.EventCreate;
 
 public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, Result<int>>
 {
+    private readonly IFileStorageService _fileStorageService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IValidator<CreateEventCommand> _validator;
-    private readonly IFileStorageService _fileStorageService;
 
-    public CreateEventCommandHandler(IUnitOfWork unitOfWork, IValidator<CreateEventCommand> validator, IFileStorageService fileStorageService)
+    public CreateEventCommandHandler(IUnitOfWork unitOfWork, IValidator<CreateEventCommand> validator,
+        IFileStorageService fileStorageService)
     {
         _unitOfWork = unitOfWork;
         _validator = validator;
@@ -31,7 +32,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, Res
 
         var newEvent = new Domain.Entities.Event(request.Title, request.Description,
             request.Location, request.EventDate, request.CreatorId, false,
-            false, categoryId: request.CategoryId);
+            false, request.CategoryId);
 
         await _unitOfWork.EventRepository.AddAsync(newEvent);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

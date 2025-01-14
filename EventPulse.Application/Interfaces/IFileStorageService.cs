@@ -1,5 +1,3 @@
-using System;
-
 namespace EventPulse.Application.Interfaces;
 
 public interface IFileStorageService

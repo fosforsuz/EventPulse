@@ -1,24 +1,23 @@
-using System;
 using EventPulse.Api.Models;
 
 namespace EventPulse.Api.Middlewares;
 
 /// <summary>
-/// Middleware to limit the number of concurrent requests globally using a semaphore.
-/// Helps prevent the system from being overwhelmed under high load.
+///     Middleware to limit the number of concurrent requests globally using a semaphore.
+///     Helps prevent the system from being overwhelmed under high load.
 /// </summary>
 public class GlobalTrafficLimiterMiddleware
 {
+    /// <summary>
+    ///     A semaphore to restrict the number of concurrent requests.
+    ///     The maximum limit is set to 500 requests.
+    /// </summary>
+    private static readonly SemaphoreSlim Semaphore = new(500);
+
     private readonly RequestDelegate _next;
 
     /// <summary>
-    /// A semaphore to restrict the number of concurrent requests.
-    /// The maximum limit is set to 500 requests.
-    /// </summary>
-    private static readonly SemaphoreSlim _semaphore = new(500);
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GlobalTrafficLimiterMiddleware"/> class.
+    ///     Initializes a new instance of the <see cref="GlobalTrafficLimiterMiddleware" /> class.
     /// </summary>
     /// <param name="next">The next middleware in the pipeline.</param>
     public GlobalTrafficLimiterMiddleware(RequestDelegate next)
@@ -27,15 +26,15 @@ public class GlobalTrafficLimiterMiddleware
     }
 
     /// <summary>
-    /// Middleware logic to limit the number of concurrent requests.
-    /// If the request cannot acquire the semaphore, it returns a 503 Service Unavailable response.
+    ///     Middleware logic to limit the number of concurrent requests.
+    ///     If the request cannot acquire the semaphore, it returns a 503 Service Unavailable response.
     /// </summary>
     /// <param name="context">The HTTP context for the current request.</param>
     /// <returns>A task that represents the completion of request processing.</returns>
     public async Task Invoke(HttpContext context)
     {
         // Attempt to acquire the semaphore without waiting.
-        if (!await _semaphore.WaitAsync(0))
+        if (!await Semaphore.WaitAsync(0))
         {
             // Semaphore can't be acquired, return 503 Service Unavailable response.
             context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
@@ -54,7 +53,7 @@ public class GlobalTrafficLimiterMiddleware
         finally
         {
             // Ensure the semaphore is released even if an exception occurs.
-            _semaphore.Release();
+            Semaphore.Release();
         }
     }
 }

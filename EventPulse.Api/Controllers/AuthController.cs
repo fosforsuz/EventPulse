@@ -20,8 +20,8 @@ namespace EventPulse.Api.Controllers;
 [Produces("application/json")]
 public class AuthController : ControllerBase
 {
-    private readonly IMediator _mediator;
     private readonly ILogger<AuthController> _logger;
+    private readonly IMediator _mediator;
 
     public AuthController(IMediator mediator, ILogger<AuthController> logger)
     {

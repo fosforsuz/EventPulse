@@ -29,7 +29,8 @@ public class UpdateEventCommandHandler : IRequestHandler<UpdateEventCommand, Res
         if (eventToUpdate is null)
             return Result.Fail<int>("Event not found");
 
-        eventToUpdate.Update(request.Title, request.Description, request.Location, request.EventDate, categoryId: request.CategoryId);
+        eventToUpdate.Update(request.Title, request.Description, request.Location, request.EventDate,
+            request.CategoryId);
 
         await _unitOfWork.EventRepository.UpdateAsync(eventToUpdate);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -15,8 +15,8 @@ public class VerifyEmailTokenCommandHandler : IRequestHandler<VerifyEmailTokenCo
 
     public async Task<Result<int>> Handle(VerifyEmailTokenCommand request, CancellationToken cancellationToken)
     {
-        var user = await _unitOfWork.UserRepository.GetSingleAsync(@user =>
-            @user.VerifiedToken.Equals(request.Token) && !@user.IsDeleted);
+        var user = await _unitOfWork.UserRepository.GetSingleAsync(user =>
+            user.VerifiedToken.Equals(request.Token) && !user.IsDeleted);
 
         if (user is null)
             return Result.Fail<int>("Invalid token");
@@ -29,7 +29,7 @@ public class VerifyEmailTokenCommandHandler : IRequestHandler<VerifyEmailTokenCo
         user.VerifyEmail();
 
         await _unitOfWork.UserRepository.UpdateAsync(user);
-        await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(user.Id);
     }

@@ -6,12 +6,12 @@ namespace EventPulse.Application.Utilities;
 
 public class FileStorageService : IFileStorageService
 {
-
     private readonly FileStorageSettings _fileStorageSettings;
 
     public FileStorageService(IOptions<FileStorageSettings> fileStorageSettings)
     {
-        _fileStorageSettings = fileStorageSettings.Value ?? throw new ArgumentNullException(nameof(fileStorageSettings));
+        _fileStorageSettings =
+            fileStorageSettings.Value ?? throw new ArgumentNullException(nameof(fileStorageSettings));
     }
 
     public string SaveFile(int eventId, Stream fileStream)
@@ -26,14 +26,10 @@ public class FileStorageService : IFileStorageService
         }
 
         return Path.Combine(_fileStorageSettings.BasePath, uniqueFileName);
-
     }
 
     private void CheckDirectory(string directory)
     {
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
+        if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
     }
 }

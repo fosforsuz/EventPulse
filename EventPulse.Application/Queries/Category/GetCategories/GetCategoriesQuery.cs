@@ -4,4 +4,4 @@ using MediatR;
 
 namespace EventPulse.Application.Queries.Category.GetCategories;
 
-public record GetCategoriesQuery() : IRequest<Result<List<CategoryDto>>>;
+public record GetCategoriesQuery : IRequest<Result<List<CategoryDto>>>;
