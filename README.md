@@ -160,7 +160,7 @@ EventPulse
 ---
 
 ## To Do
-- **Logging**: Integrate a logging system for monitoring and debugging.
+- **Logging**: Integrate a logging system for monitoring and debugging with Elasticsearch and Kibana.
 - **Real-Time Notifications**: Add SignalR or WebSocket for real-time updates.
 - **Testing**: Expand unit tests and add integration tests.
 
